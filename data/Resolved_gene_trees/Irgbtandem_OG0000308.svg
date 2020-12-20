@@ -12,8 +12,11 @@
    viewBox="0 0 2047.0091 926.01335"
    version="1.1"
    id="svg172"
-   sodipodi:docname="OG0000308_tree.txt.svg"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+   sodipodi:docname="Irgbtandem_OG0000308.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:export-filename="/home/alice/Desktop/Git/RodentIRGs/data/Resolved_gene_trees/OG0000308_tree.txt.svg.png"
+   inkscape:export-xdpi="400"
+   inkscape:export-ydpi="400">
   <metadata
      id="metadata178">
     <rdf:RDF>
@@ -38,14 +41,14 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1051"
+     inkscape:window-height="1141"
      id="namedview174"
      showgrid="false"
      inkscape:zoom="0.5"
-     inkscape:cx="1396.6392"
-     inkscape:cy="764.70143"
-     inkscape:window-x="0"
-     inkscape:window-y="120"
+     inkscape:cx="1378.76"
+     inkscape:cy="548.69754"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="g164"
      fit-margin-top="1"
@@ -73,7 +76,7 @@
        y="25"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text10">M ochrogaster MicOch1 ENSMOCG00000008024.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#0000ff"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#0000ff;font-size:30.00072714px"
    id="tspan1019">M. ochrogaster homologous of all 4 B tandems-first</tspan>
 </text>
     <path
@@ -85,7 +88,7 @@
        y="69"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text14">M ochrogaster MicOch1 ENSMOCG00000016393.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#0000ff"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#0000ff;font-size:30.00072714px"
    id="tspan1021">M. ochrogaster homologous of all 4 B tandems-second</tspan>
 </text>
     <path
@@ -105,8 +108,11 @@
        y="113"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text22">M glareolus 2 ASM436859v1 ENSMGLG00005015930.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#ff00ff"
-   id="tspan1017">Vole homologous of all 4 B tandems</tspan>
+   style="font-size:30.0007267px;fill:#ff00ff;-inkscape-font-specification:'Sans Bold';font-family:Sans;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal"
+   id="tspan922">M. glareolus</tspan>
+<tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.0007267px;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#ff00ff"
+   id="tspan1017">homologous of all 4 B tandems</tspan>
 </text>
     <path
        d="M 259,75 H 151"
@@ -125,7 +131,7 @@
        y="157"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text30">R norvegicus Rnor 6 0 XP 220362.3 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#550000"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#550000;font-size:30.00072714px"
    id="tspan1003">Rat homologous of all 4 B tandems</tspan>
 </text>
     <path
@@ -137,8 +143,8 @@
        y="202"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text34">M musculus GRCm38 ENSMUSG00000069892.9 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
-   id="tspan985">Irgb4b5</tspan>
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.0007267px;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
+   id="tspan985">Irgb4b5*</tspan>
 </text>
     <path
        d="m 824,241 h -3"
@@ -149,8 +155,8 @@
        y="246"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text38">M musculus GRCm38 ENSMUSG00000069893.10 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
-   id="tspan987">Irgb3b5*</tspan>
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.0007267px;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
+   id="tspan987">Irgb3b5</tspan>
 </text>
     <path
        d="m 823,285 h -2"
@@ -161,8 +167,8 @@
        y="290"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text42">M musculus GRCm38 ENSMUSG00000116112.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
-   id="tspan989">in WSB</tspan>
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.0007267px;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+   id="tspan989">Irgb3b5 in WSB</tspan>
 </text>
     <path
        d="m 821,263 h -3"
@@ -189,8 +195,8 @@
        y="335"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text54">M musculus GRCm38 ENSMUSG00000116032.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
-   id="tspan991">Irgb9b8 in WSB</tspan>
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.0007267px;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+   id="tspan991">Irgb8b9 in WSB</tspan>
 </text>
     <path
        d="m 843,374 h -7"
@@ -201,8 +207,8 @@
        y="379"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text58">M musculus GRCm38 ENSMUSG00000058163.14 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
-   id="tspan993">Irgb9b8</tspan>
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.0007267px;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
+   id="tspan993">Irgb8b9</tspan>
 </text>
     <path
        d="M 836,352 H 809"
@@ -221,8 +227,8 @@
        y="423"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text66">M musculus GRCm38 ENSMUSG00000116047.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
-   id="tspan995">Irgb9b8 in PWK</tspan>
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.0007267px;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+   id="tspan995">Irgb8b9 in PWK</tspan>
 </text>
     <path
        d="M 809,385 H 793"
@@ -248,8 +254,8 @@
        x="969"
        y="468"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
-       id="text78">M musculus GRCm38 ENSMUSG00000116374.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+       id="text78">M musculus GRCm38 ENSMUSG00000116374.1<tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';font-size:30.00072714px"
    id="tspan997">Irgb2b1 in WSB</tspan>
 </text>
     <path
@@ -260,8 +266,8 @@
        x="974"
        y="512"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
-       id="text82">M musculus GRCm38 ENSMUSG00000048852.13 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
+       id="text82">M musculus GRCm38 ENSMUSG00000048852.13<tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000;font-size:30.00072714px"
    id="tspan999">Irgb2b1</tspan>
 </text>
     <path
@@ -280,8 +286,8 @@
        x="969"
        y="556"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
-       id="text90">M musculus GRCm38 ENSMUSG00000116523.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+       id="text90">M musculus GRCm38 ENSMUSG00000116523.1<tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';font-size:30.00072714px"
    id="tspan1001">Irgb2b1 in PWK</tspan>
 </text>
     <path
@@ -324,8 +330,8 @@
        x="263"
        y="601"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
-       id="text110">M glareolus 2 ASM436859v1 ENSMGLG00005002992.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#ff00ff"
+       id="text110">M glareolus 2 ASM436859v1 ENSMGLG00005002992.1<tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.0007267px;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#ff00ff"
    id="tspan1023">M. glareolus no homology found</tspan>
 </text>
     <path
@@ -337,7 +343,7 @@
        y="645"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text114">M musculus GRCm38 ENSMUSG00000078921.3 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000;font-size:30.00072714px"
    id="tspan1009">Irgb6</tspan>
 </text>
     <path
@@ -348,8 +354,8 @@
        x="626"
        y="689"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
-       id="text118">M musculus GRCm38 ENSMUSG00000078922.9 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
+       id="text118">M musculus GRCm38 ENSMUSG00000078922.9<tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.0007267px;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#008000"
    id="tspan1011">Irgb6*</tspan>
 </text>
     <path
@@ -361,7 +367,7 @@
        y="734"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text122">M musculus GRCm38 ENSMUSG00000115886.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';font-size:30.00072714px"
    id="tspan1013">Irgb6 in WSB</tspan>
 </text>
     <path
@@ -389,7 +395,7 @@
        y="778"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text134">M musculus GRCm38 ENSMUSG00000116463.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';font-size:30.00072714px"
    id="tspan1015">Irgb6 in PWK</tspan>
 </text>
     <path
@@ -409,7 +415,7 @@
        y="822"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
        id="text142">R norvegicus Rnor 6 0 XP 006246477.2 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#550000"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#550000;font-size:30.00072714px"
    id="tspan1007">Irgb6-b6*-like</tspan>
 </text>
     <path
@@ -420,9 +426,9 @@
        x="1536"
        y="867"
        style="font-style:normal;font-weight:normal;font-size:13.33333302px;font-family:Sans;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-opacity:1"
-       id="text146">M glareolus 2 ASM436859v1 ENSMGLG00005013711.1 <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#ff00ff"
-   id="tspan1005">Irgb6-b6*-like</tspan>
+       id="text146">M glareolus 2 ASM436859v1 ENSMGLG00005013711.1<tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30.00075722px;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#ff00ff"
+   id="tspan1005" />
 </text>
     <path
        d="M 798,839 H 158"
@@ -456,6 +462,130 @@
        d="m 20,434 v 0"
        id="path162"
        inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:30.0007267px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.75001818"
+       x="1665.2072"
+       y="893.0354"
+       id="text954"><tspan
+         sodipodi:role="line"
+         id="tspan952"
+         x="1665.2072"
+         y="893.0354"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ff00ff;stroke-width:0.75001818">Irgb6-b6*-like</tspan></text>
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.75001818;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path959"
+       sodipodi:sides="5"
+       sodipodi:cx="291.17365"
+       sodipodi:cy="42.514891"
+       sodipodi:r1="17.055279"
+       sodipodi:r2="8.5276403"
+       sodipodi:arg1="0.62546047"
+       sodipodi:arg2="1.253779"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 305.00025,52.500257 -11.16825,-1.882661 -7.88235,8.132827 -1.66066,-11.203412 -10.17055,-4.983373 10.1419,-5.041428 1.5966,-11.212722 7.9287,8.087638 11.15731,-1.946469 -5.2417,10.039863 z"
+       inkscape:transform-center-x="1.6143013"
+       inkscape:transform-center-y="0.015063103" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.75001818;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path959-3"
+       sodipodi:sides="5"
+       sodipodi:cx="759.29932"
+       sodipodi:cy="414.50884"
+       sodipodi:r1="17.055279"
+       sodipodi:r2="8.5276403"
+       sodipodi:arg1="0.62546047"
+       sodipodi:arg2="1.253779"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 773.12592,424.49421 -11.16825,-1.88266 -7.88234,8.13283 -1.66067,-11.20341 -10.17055,-4.98337 10.1419,-5.04143 1.5966,-11.21272 7.9287,8.08763 11.15731,-1.94647 -5.2417,10.03987 z"
+       inkscape:transform-center-x="1.6143013"
+       inkscape:transform-center-y="0.015063103" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.75001818;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path959-6"
+       sodipodi:sides="5"
+       sodipodi:cx="793.80013"
+       sodipodi:cy="309.50629"
+       sodipodi:r1="17.055279"
+       sodipodi:r2="8.5276403"
+       sodipodi:arg1="0.62546047"
+       sodipodi:arg2="1.253779"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 807.62672,319.49165 -11.16826,-1.88266 -7.88234,8.13283 -1.66066,-11.20341 -10.17056,-4.98338 10.14191,-5.04143 1.59659,-11.21272 7.92871,8.08764 11.1573,-1.94647 -5.24169,10.03986 z"
+       inkscape:transform-center-x="1.6143013"
+       inkscape:transform-center-y="0.015063103" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.75001818;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path959-7"
+       sodipodi:sides="5"
+       sodipodi:cx="75.282616"
+       sodipodi:cy="432.5093"
+       sodipodi:r1="17.055279"
+       sodipodi:r2="8.5276403"
+       sodipodi:arg1="0.62546047"
+       sodipodi:arg2="1.253779"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 89.109221,442.49467 -11.168251,-1.88266 -7.882345,8.13283 -1.660661,-11.20341 -10.170557,-4.98338 10.141905,-5.04143 1.596595,-11.21272 7.928704,8.08764 11.157307,-1.94647 -5.241697,10.03987 z"
+       inkscape:transform-center-x="1.6143013"
+       inkscape:transform-center-y="0.015063103" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:30.0007267px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.75001818"
+       x="97.669006"
+       y="443.0246"
+       id="text990"><tspan
+         sodipodi:role="line"
+         id="tspan988"
+         x="97.669006"
+         y="443.0246"
+         style="stroke-width:0.75001818">Duplication events</tspan></text>
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.75001818;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path959-6-3"
+       sodipodi:sides="5"
+       sodipodi:cx="817.80068"
+       sodipodi:cy="225.50427"
+       sodipodi:r1="17.055279"
+       sodipodi:r2="8.5276403"
+       sodipodi:arg1="0.62546047"
+       sodipodi:arg2="1.253779"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 831.62726,235.48964 -11.16825,-1.88266 -7.88234,8.13282 -1.66066,-11.20341 -10.17056,-4.98337 10.14191,-5.04143 1.59659,-11.21272 7.9287,8.08764 11.15731,-1.94647 -5.2417,10.03986 z"
+       inkscape:transform-center-x="1.6143013"
+       inkscape:transform-center-y="0.015063103" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.75001818;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path959-6-6"
+       sodipodi:sides="5"
+       sodipodi:cx="35.384542"
+       sodipodi:cy="687.46808"
+       sodipodi:r1="17.055279"
+       sodipodi:r2="8.5276403"
+       sodipodi:arg1="0.62546047"
+       sodipodi:arg2="1.253779"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 49.211146,697.45344 -11.168251,-1.88266 -7.882345,8.13283 -1.660661,-11.20341 -10.170558,-4.98338 10.141906,-5.04142 1.596595,-11.21273 7.928704,8.08764 11.157307,-1.94647 -5.241697,10.03987 z"
+       inkscape:transform-center-x="1.6143013"
+       inkscape:transform-center-y="0.015063103" />
   </g>
   <g
      style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
