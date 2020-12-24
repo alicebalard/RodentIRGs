@@ -1,11 +1,14 @@
 library(ggplot2)
-setwd("../")
+setwd("../data")
 
 my23posdf <- read.table("23BlastPosition_noseq.txt")
 my23posdf
 
 names(my23posdf) <- c("Pos", "Chr", "Start", "End")
-my23posdf$Chr <- factor(my23posdf$Chr, levels = c("LR761981.1", "LR761995.1", "LR761979.1","LR761921.1"))
+
+# correction good order
+my23posdf <- my23posdf[order(my23posdf$Chr),]
+my23posdf$Pos <- paste0("P", 1:24)
 
 ggplot(my23posdf) +
   geom_rect(aes(xmin=Start, xmax=End, ymin = 0, ymax=1)) +
@@ -13,7 +16,11 @@ ggplot(my23posdf) +
   geom_label(aes(label=Pos, x = Start, y = rep(c(0.2, 0.5, 0.8),8))) +
   theme_bw() +
   theme(axis.text.y = element_blank(), axis.ticks.y= element_blank(),
-        axis.title =  element_blank())
+        axis.title =  element_blank()) +
+  scale_x_continuous(breaks = seq(ceiling(min(my23posdf$Start)/10000) *10000, 
+                                  ceiling(max(my23posdf$End)/10000) *10000, 100000),
+                     labels = paste0(seq(ceiling(min(my23posdf$Start)/10000) *10000, 
+                                         ceiling(max(my23posdf$End)/10000) *10000, 100000)/1000, "K")) 
 
 
 
