@@ -27,6 +27,13 @@
 ### Run Orthofinder
 # orthofinder -f primary_transcripts/
 
-## extract orthogroups
-# grep -E "NP_001028939.1|NP_001030031.2|NP_001094945.1|NP_068564.4|NP_001342686.1|NP_062313.3|NP_061208.3|NP_001039005.1|NP_001019401.2|NP_001108151.1|NP_035709.3|NP_775610.1|NP_001138636.1|NP_001258606.1|NP_001128587.1|NP_001344963.1|NP_694774.3" primary_transcripts/OrthoFinder/Results_Feb06/Orthogroups/Orthogroups.tsv > Mmus_GRCm39_IRG_prot_names_corresp_orthofinder.csv
-## -> gitted file
+# Extract gene trees for IRGs
+GIT/RodentIRGs$ cat figures/Table1_IRGs_naming.csv | cut -d ',' -f6 >> tempIRGprot.txt
+cat tempIRGprot.txt | sed '/^$/d' > temp2
+cat temp2 | sed '/?/d' > tempIRGprot.txt
+
+/SAN/Alices_sandpit/Torelli_transcriptomics/big_data/proteomes/Results_OrthoFinder$ head -n 1 Phylogenetic_Hierarchical_Orthogroups/N0.tsv >> N0_HOG_IRG.tsv
+rg -f ../../../GIT/RodentIRGs/tempIRGprot.txt Phylogenetic_Hierarchical_Orthogroups/N0.tsv >> N0_HOG_IRG.tsv 
+mv N0_HOG_IRG.tsv  ../../../GIT/RodentIRGs/rawdata/orthoFinder_sub/
+
+
