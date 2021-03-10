@@ -28,12 +28,17 @@
 # orthofinder -f primary_transcripts/
 
 # Extract gene trees for IRGs
-GIT/RodentIRGs$ cat figures/Table1_IRGs_naming.csv | cut -d ',' -f6 >> tempIRGprot.txt
-cat tempIRGprot.txt | sed '/^$/d' > temp2
-cat temp2 | sed '/?/d' > tempIRGprot.txt
+## from GIT/RodentIRGs$ 
+cat figures/Table1_IRGs_naming.csv | cut -d ',' -f6 > tempIRGprot.txt;
+cat tempIRGprot.txt | sed '/^$/d' > temp2;
+cat temp2 | sed '/?/d' > tempIRGprot.txt;
+sed 's/\;/\n/g' tempIRGprot.txt > temp;
+sed 's/ //g' temp > tempIRGprot.txt;
+rm temp; rm temp2
 
-/SAN/Alices_sandpit/Torelli_transcriptomics/big_data/proteomes/Results_OrthoFinder$ head -n 1 Phylogenetic_Hierarchical_Orthogroups/N0.tsv >> N0_HOG_IRG.tsv
-rg -f ../../../GIT/RodentIRGs/tempIRGprot.txt Phylogenetic_Hierarchical_Orthogroups/N0.tsv >> N0_HOG_IRG.tsv 
-mv N0_HOG_IRG.tsv  ../../../GIT/RodentIRGs/rawdata/orthoFinder_sub/
+# Extract all orthologues: 
+TOR_PATH=/SAN/Alices_sandpit/Torelli_transcriptomics/;
+head -n 1 $TOR_PATH/big_data/proteomes/Results_OrthoFinder/Phylogenetic_Hierarchical_Orthogroups/N0.tsv > $TOR_PATH/GIT/RodentIRGs/rawdata/orthoFinder_sub/N0_HOG_IRG.tsv;
+rg -f $TOR_PATH/GIT/RodentIRGs/tempIRGprot.txt $TOR_PATH/big_data/proteomes/Results_OrthoFinder/Phylogenetic_Hierarchical_Orthogroups/N0.tsv >> $TOR_PATH/GIT/RodentIRGs/rawdata/orthoFinder_sub/N0_HOG_IRG.tsv
 
 
