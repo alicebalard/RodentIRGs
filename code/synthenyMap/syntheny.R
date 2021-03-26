@@ -25,9 +25,19 @@ d1 <- d1[order(as.numeric(gsub("_part2", "", gsub("Chr","",d1$chr)))),]
 d2 <- data[!grepl("Chr", data$chr),]
 data <- rbind(d1, d2)
 
+# order species
+data <- data[order(data$rankSpecies),]
+
 speciesList <- unique(data$Species)
 chrList <- unique(data$chr)
 data$combi <- paste0(data$Species, data$chr)
+
+# choose colors
+data$color <- "black"
+data$color[data$IrgName %in% "IrgbTandems"] <- "red"
+data$color[data$IrgName %in% "Irgb6-6*"] <- "blue"
+data$color[data$IrgName %in% "Irgb10"] <- "green"
+data$color[data$IrgName %in% "Irga2-6"] <- "yellow"
 
 # divisor of length of the ... extra part of chromosomes
 div = 5
@@ -41,13 +51,6 @@ for (s in speciesList){
     if(paste0(s, c) %in% data$combi){
       # if yes, plot
       subdata <- data[data$Species %in% s & data$chr %in% c,]
-      
-      # choose colors
-      subdata$color <- "black"
-      subdata$color[subdata$IrgName %in% "IrgbTandems"] <- "red"
-      subdata$color[subdata$IrgName %in% "Irgb6-6*"] <- "blue"
-      subdata$color[subdata$IrgName %in% "Irgb10"] <- "green"
-      subdata$color[subdata$IrgName %in% "Irga2-6"] <- "yellow"
       
       # prepare graduated axis along chr
       step=100000
