@@ -1,8 +1,6 @@
 library(ggplot2)
-library(reshape2)
-library(dplyr)
-library(gridExtra)
 library(ggrepel)
+library(dplyr)
 library(cowplot)
 
 data <- read.csv("../data/data4syntheny.csv", sep = "\t")
