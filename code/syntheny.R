@@ -5,7 +5,7 @@ library(cowplot)
 
 source("keepBestBlast.R")
 
-dataOF <- read.csv("../data/data4syntheny_OF.csv", sep = "\t")
+dataOF <- read.csv("../data/data4syntheny_OF.csv")
 datatblastn <- read.csv("../data/data4syntheny_tblastn.csv")
 
 breakSizePlot <- 50000
@@ -61,7 +61,7 @@ prepareData <- function(data){
   data$arrowEnd[data$forward_reverse %in% "R"] <- data$geneStartPlot[data$forward_reverse %in% "R"] 
   
   return(data)
- 
+  
 }
 
 makePlotPerSpecies <- function(df){

@@ -47,9 +47,9 @@ for (f in filenames){
   blastdata$Species <- substrRight(f, 4)
   
   
-  # for each candidate IRG, keep the row with the lowest p-value, then highest bitscore, then highest percentage identity
+  # for each candidate IRG, keep the row with the highest bitscore (if by eval, keep the first randomly if eval = 0)
   blastdataFinal <- blastdata %>% group_by(candidate) %>% 
-    dplyr::slice_max(order_by = bitscore) %>% # NB if by eval, keep the first randomly if eval = 0
+    dplyr::slice_max(order_by = bitscore) %>% 
     data.frame()
   
   Results_blast_full <- rbind(Results_blast_full, blastdata)
@@ -94,5 +94,4 @@ Results_blast_best$Species[Results_blast_best$Species %in% "Rrat"] <- "R.rattus"
 
 ## WRITE OUT
 write.csv(Results_blast_best, "../data/data4syntheny_tblastn.csv", row.names = F)
-
-#test <- Results_blast_full[Results_blast_full$qseqid %in% c("Irgb8", "Irgb4"),]
+  
