@@ -79,7 +79,7 @@ makePlotPerSpecies <- function(df){
                   ymin=rankChr-0.2,ymax=rankChr+0.2), fill = "lightgrey", col = "white", alpha=.4)+
     geom_rect(aes(xmin=part1chrLength+breakSizePlot, xmax= part1chrLength + breakSizePlot + part2chrLength,
                   ymin=rankChr-0.2,ymax=rankChr+0.2), fill = "lightgrey", col = "white", alpha=.4)+
-    scale_y_reverse(breaks=1:length(unique(df$chr)), labels = unique(df$chr))+
+    scale_y_reverse(breaks=1:length(unique(df$chr)), labels = levels(droplevels(df$chr)))+ 
     # make a cut for long chromosomes
     geom_segment(aes(x=part1chrEnd-part1chrStart, xend= part1chrEnd-part1chrStart+breakSizePlot,
                      y=rankChr,yend=rankChr, col = isBreak), linetype = 2, size =2)+
