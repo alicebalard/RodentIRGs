@@ -5,13 +5,11 @@
 TOR_PATH=/SAN/Alices_sandpit/Torelli_transcriptomics
 
 ## A. Identify nucleotide and protein sequences from Bekpen to the newest Mus musculus genome
-tblastn -db $TOR_PATH/big_data/genomes/musMusculus/GCF_000001635.27_GRCm39_genomic.fna -query $TOR_PATH/GIT/RodentIRGs/data/Protein_sequences_of_IRG_mouse_Bekpen_2005.fasta -num_threads 16 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $TOR_PATH/GIT/RodentIRGs/data/blast_results/IRGmus2mus/tblastnIRGBekpen_vs_MmusGRCm39.outfmt6 -max_target_seqs 3 -max_hsps 2
-
-blastn -db $TOR_PATH/big_data/genomes/musMusculus/GCF_000001635.27_GRCm39_genomic.fna -query $TOR_PATH/GIT/RodentIRGs/data/Nucleotide_sequences_of_IRG_mouse_Bekpen_2005.fasta -num_threads 16 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $TOR_PATH/GIT/RodentIRGs/data/blastnIRGBekpen_vs_MmusGRCm39.outfmt6 -max_target_seqs 3 -max_hsps 2
+tblastn -db $TOR_PATH/big_data/genomes/musMusculus/GCF_000001635.27_GRCm39_genomic.fna -query $TOR_PATH/GIT/RodentIRGs/data/REFERENCE_Protein_sequences_of_IRG_mouse_GRCm39_and_Bekpen2005 -num_threads 16 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $TOR_PATH/GIT/RodentIRGs/data/blast_results/IRGmus2mus/tblastnIRGBekpen_vs_MmusGRCm39.outfmt6 -max_target_seqs 3 -max_hsps 2
 
 ## B. Search for IRGs: TBLASTN search translated nucleotide databases using a protein query in genomes for our 11 rodent species
 for F in $TOR_PATH/big_data/genomes/*.fna; do makeblastdb -in $F -dbtype nucl; done
-for F in $TOR_PATH/big_data/genomes/*.fna; do tblastn -query $TOR_PATH/GIT/RodentIRGs/data/Protein_sequences_of_IRG_mouse_GRCm39.fasta -db $F -num_threads 16 -evalue 1e-100 -max_hsps 10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $TOR_PATH/GIT/RodentIRGs/data/blast_results/IRGmus2otherRodents/tBlastnIRGmusGRCm39_vs_$(basename -- "$F").outfmt6; done
+for F in $TOR_PATH/big_data/genomes/*.fna; do tblastn -query $TOR_PATH/GIT/RodentIRGs/data/REFERENCE_Protein_sequences_of_IRG_mouse_GRCm39_and_Bekpen2005.fasta -db $F -num_threads 16 -evalue 1e-100 -max_hsps 10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $TOR_PATH/GIT/RodentIRGs/data/blast_results/IRGmus2otherRodents/tBlastnIRGmusGRCm39_vs_$(basename -- "$F").outfmt6; done
 
 ## Extra tools:
 
