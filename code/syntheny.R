@@ -156,7 +156,7 @@ pdf(file = "../figures/SyntenyPlot_muridae_tblastn.pdf", width = Wm, height =Hm+
 makeSubPlot(gp = muridae2, data = prepareData(datatblastn))
 dev.off()
 
-pdf(file = "../figures/SyntenyPlot_cricetidae_tblastn.pdf", width = Wc, height = Hc+15)
+pdf(file = "../figures/SyntenyPlot_cricetidae_tblastn.pdf", width = Wc, height = Hc+25)
 makeSubPlot(gp = cricetidae2, data = prepareData(datatblastn))
 dev.off()
 
