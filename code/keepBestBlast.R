@@ -91,13 +91,14 @@ makedata4syntheny <- function(filenames){
 write.csv(makedata4syntheny(filenames1), "../data/data4syntheny_tblastn.csv", row.names = F)
 ## make fasta
 d <- makedata4syntheny(filenames1) ; dlist <- as.list(d$sseq)
-names(dlist) <- paste0(d$IrgName, "_", d$Species, " (tblastn Mmus vs transcriptome)")
+names(dlist) <- paste0(d$IrgName, "_", d$Species, " (tblastn Mmus vs genome)")
 write.fasta(sequences = dlist, file.out = "../data/blast_results/IRGmus2otherRodents/tBlastnIRGmusGRCm39_vs_allRodents_besthits.fasta", 
             names = names(dlist), nbchar = 10000)
 
 write.csv(makedata4syntheny(filenames2), "../data/data4syntheny_tblastn-transcriptome.csv", row.names = F)
 ## make fasta
 d <- makedata4syntheny(filenames2) ; dlist <- as.list(d$sseq)
-names(dlist) <- paste0(d$IrgName, "_", d$Species, " (tblastn Mmus vs transcriptome)")
+names(dlist) <- paste0(d$IrgName, "_", d$Species, " (tblastn Mmus vs de novo transcriptome)")
 write.fasta(sequences = dlist, file.out = "../data/blast_results/IRGmus2transcriptomes/tBlastnIRGmusGRCm39_vs_denovotranscriptomes_besthits.fasta", 
             names = names(dlist), nbchar = 10000)
+  
