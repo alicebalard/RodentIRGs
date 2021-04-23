@@ -7,6 +7,7 @@ source("keepBestBlast.R")
 
 dataOF <- read.csv("../data/data4syntheny_OF.csv")
 datatblastn <- read.csv("../data/data4syntheny_tblastn.csv")
+datatblastn_transcriptome <- read.csv("../data/data4syntheny_tblastn-transcriptome.csv")
 
 breakSizePlot <- 50000
 
@@ -158,3 +159,11 @@ dev.off()
 pdf(file = "../figures/SyntenyPlot_cricetidae_tblastn.pdf", width = Wc, height = Hc+15)
 makeSubPlot(gp = cricetidae2, data = prepareData(datatblastn))
 dev.off()
+
+# 3. From tblastn on transcriptomes
+Wm = 20
+Hm = 20
+pdf(file = "../figures/SyntenyPlot_transcriptomics.pdf", width = Wm, height =Hm)
+makeSubPlot(gp = unique(datatblastn_transcriptome$Species), data = prepareData(datatblastn_transcriptome))
+dev.off()
+

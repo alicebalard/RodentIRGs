@@ -2,9 +2,12 @@
 # 13 April 2021
 
 library(dplyr)
+library(seqinr)
 
-filenames1 <- list.files("../data/blast_results/IRGmus2otherRodents/", full.names=TRUE)
-filenames2 <- list.files("../data/blast_results/IRGmus2transcriptomes/", full.names=TRUE)
+# pb in files
+
+filenames1 <- list.files("../data/blast_results/IRGmus2otherRodents/", full.names=TRUE, pattern = "\\.outfmt6$")
+filenames2 <- list.files("../data/blast_results/IRGmus2transcriptomes/", full.names=TRUE, pattern = "\\.outfmt6$")
 
 makedata4syntheny <- function(filenames){
   
@@ -47,7 +50,7 @@ makedata4syntheny <- function(filenames){
     Results_blast_best <- rbind(Results_blast_best, blastdataFinal)
   }
   
-  # homogenize for synteny map: 
+  # homogenize for synteny map:
   ## (1) chr, start, end, forward_reverse colums
   names(Results_blast_best)[names(Results_blast_best)%in% "sseqid"] <- "chr"
   ## (2)IrgGroup in "pseudogene", "IrgbTandem", "Irgb6-OG1", "Irgb6-OG2", "Irgb6-tbn","Irgb10",
@@ -55,15 +58,15 @@ makedata4syntheny <- function(filenames){
   Results_blast_best$IrgGroup <- gsub("_refMmus", "", gsub("_refMus", "", Results_blast_best$qseqid))
   Results_blast_best$IrgGroup[grepl("Irga1|Irga5|Irga8|Irga7|Irgb7", Results_blast_best$IrgGroup)] <- "pseudogene"
   Results_blast_best$IrgGroup[grepl("Irga2|Irga6", Results_blast_best$IrgGroup)] <- "Irga2-6"
-  Results_blast_best$IrgGroup[Results_blast_best$IrgGroup %in% 
+  Results_blast_best$IrgGroup[Results_blast_best$IrgGroup %in%
                                 c("Irgb2","Irgb1","Irgb4","Irgb5","Irgb3","Irgb9","Irgb8")] <- "IrgbTandem"
   Results_blast_best$IrgGroup[Results_blast_best$IrgGroup %in% "Irgb6*"] <- "Irgb6"
-  
+
   ## (3) IrgName
   Results_blast_best <- data.frame(Results_blast_best %>% group_by(Species, qseqid) %>% mutate(id = row_number()))
   Results_blast_best$IrgName <- gsub("_refMus", "", paste(Results_blast_best$qseqid, Results_blast_best$id, sep = "."))
   
-  ## (4) Species names
+  # (4) Species names
   Results_blast_best$Species[Results_blast_best$Species %in% "Aamp"] <- "A.amphibius"
   Results_blast_best$Species[Results_blast_best$Species %in% "Asyl"] <- "A.sylvaticus"
   Results_blast_best$Species[Results_blast_best$Species %in% "Marv"] <- "M.arvalis"
@@ -84,7 +87,17 @@ makedata4syntheny <- function(filenames){
   return(Results_blast_best)
 }
 
-
-## WRITE OUT
+## WRITE OUT both fasta and file for synteny
 write.csv(makedata4syntheny(filenames1), "../data/data4syntheny_tblastn.csv", row.names = F)
+## make fasta
+d <- makedata4syntheny(filenames1) ; dlist <- as.list(d$sseq)
+names(dlist) <- paste0(d$IrgName, "_", d$Species, " (tblastn Mmus vs transcriptome)")
+write.fasta(sequences = dlist, file.out = "../data/blast_results/IRGmus2otherRodents/tBlastnIRGmusGRCm39_vs_allRodents_besthits.fasta", 
+            names = names(dlist), nbchar = 10000)
+
 write.csv(makedata4syntheny(filenames2), "../data/data4syntheny_tblastn-transcriptome.csv", row.names = F)
+## make fasta
+d <- makedata4syntheny(filenames2) ; dlist <- as.list(d$sseq)
+names(dlist) <- paste0(d$IrgName, "_", d$Species, " (tblastn Mmus vs transcriptome)")
+write.fasta(sequences = dlist, file.out = "../data/blast_results/IRGmus2transcriptomes/tBlastnIRGmusGRCm39_vs_denovotranscriptomes_besthits.fasta", 
+            names = names(dlist), nbchar = 10000)
