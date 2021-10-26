@@ -137,3 +137,10 @@ save(data_FINAL, file = "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentI
 ## to load
 #load("/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/data_FINAL.RData")
 ##############################
+
+nrow(data_FINAL)# 238
+
+### Make fasta file from orthofinder results
+fastaOF  <- paste0(">", data_FINAL$IRGname," ", data_FINAL$protein_name, "\n", data_FINAL$protein_seq_only)
+
+write.table(fastaOF, file = "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/candidatesFromOF.fasta", sep = "\n", col.names=FALSE, row.names = FALSE, quote=FALSE )
