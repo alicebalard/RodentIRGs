@@ -3,6 +3,7 @@
 ## April 2021
 ## stored in Harriet (Heitlinger team server)
 TOR_PATH=/SAN/Alices_sandpit/Torelli_transcriptomics
+TRINITY_HOME=/usr/local/bin/trinityrnaseq-Trinity-v2.6.6
 
 # Kidney cells from Myodes glareolus (BVK), lung cells from Apodemus agrarius (AAL), and kidney cell line from Microtus arvalis (FMN)were either treated with IFNg or not. 
 # RNAseq was performed for the 6 samples using Illumina-HiSeq2500/4000. 42.5 million reads were obtained on average per sample (min: 38 million; max: 56.5 million). 
@@ -12,8 +13,10 @@ TOR_PATH=/SAN/Alices_sandpit/Torelli_transcriptomics
 # Part I. CLEAN READS
 
 ## Step 1. fastqc, quality metrics reads
-
 # raw reads are in $TOR_PATH/big_data/transcriptomicsTorellidata/1.rawreads
+j=`basename $1`
+mkdir -p fastqc_$j
+fastqc --outdir fastqc_$j $1  2>&1 > $j.fastqc.sbatch.out
 # fastqc reports are in html format in $TOR_PATH/big_data/transcriptomicsTorellidata/2.fastqc_rawreads
 # Results: some K-mers beginning/end of reads; quite a bunch of duplicated reads; weird base content at extremities, etc. 
 
@@ -46,13 +49,11 @@ cd $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads
 # all in $TOR_PATH/big_data/transcriptomicsTorellidata/5.fastqcAfterTrimming
 
 ############################################
-# PART II. Trasncriptome assembly
+# PART II. Transcriptome assembly
 ## Step 1. Run Trinity DE NOVO
 ## (A) one transcriptome per SAMPLE 
 ## (B) one transcriptome by SPECIES (merge Ctrl and IFNg)
-## (C) genome-guided
-
-TRINITY_HOME=/usr/local/bin/trinityrnaseq-Trinity-v2.6.6/
+## (C) genome-guided (only one used at the end)
 
 # (A) one transcriptome per SAMPLE
 # $1 = comma-separated list of R1 files
@@ -66,9 +67,26 @@ $TRINITY_HOME/Trinity --seqType fq --SS_lib_type RF --max_memory 20G --min_kmer_
 ## RESULT IS $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/B.oneTranscriptomePerSpecies/AAL-merged_trinity/AAL-Trinity-transcriptome.fasta
 # done 3 times
 
-## (C) genome guided for myodes and microtus
-# ?? FMN (microtus arvalis) and BVK (myodes glareolus) guided by microtus ochrogaster genome (https://www.ncbi.nlm.nih.gov/genome/10848)
+## (C) genome guided 
+# source https://github.com/trinityrnaseq/trinityrnaseq/wiki/Genome-Guided-Trinity-Transcriptome-Assembly
 
+# Users must provide read alignments to Trinity as a coordinate-sorted bam file. Use GSNAP, TopHat, STAR or other favorite RNA-Seq read alignment tool to generate the bam file, and be sure it's coordinate sorted by running 'samtools sort' on it.
+
+## index 3 genomes for GSnap: Apodemus sylvaticus genome assembly ASM130590v1 for A. agrarius (AAL-R), Microtus arvalis genome assembly ASM745561v1 for M. arvalis cells (FMN-R), and Myodes glareolus genome assembly Bank_vole1_10x for Myodes glareolus 
+pathGuided=/SAN/Alices_sandpit/Torelli_transcriptomics/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity
+
+G1=/SAN/Alices_sandpit/Torelli_transcriptomics/big_data/genomes/Asyl_GCA_001305905.1_ASM130590v1_genomic.fna
+G2=/SAN/Alices_sandpit/Torelli_transcriptomics/big_data/genomes/Marv_GCA_007455615.1_ASM745561v1_genomic.fna
+G3=/SAN/Alices_sandpit/Torelli_transcriptomics/big_data/genomes/Mgla_1_GCA_902806735.1_Bank_vole1_10x_genomic.fna
+
+gmap_build -d `basename $G1`_gsnap -D $pathGuided $G1; gmap_build -d `basename $G2`_gsnap -D $pathGuided $G2; gmap_build -d `basename $G3`_gsnap -D $pathGuided $G3;gsnap -d `basename $G1`_gsnap -D ${pathGuided} -t 16 -M 2 -N 1 -A sam $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/AAL-trimmed-merged-1.fq $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/AAL-trimmed-merged-2.fq | samtools view -bS - | samtools sort - > ${pathGuided}/`basename $G1`_gsnap.sortedByCoord.out.bam;gsnap -d `basename $G2`_gsnap -D ${pathGuided} -t 16 -M 2 -N 1 -A sam $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/FMN-trimmed-merged-1.fq $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/FMN-trimmed-merged-2.fq | samtools view -bS - | samtools sort - > ${pathGuided}/`basename $G2`_gsnap.sortedByCoord.out.bam;gsnap -d `basename $G3`_gsnap -D ${pathGuided} -t 16 -M 2 -N 1 -A sam $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/BVK-trimmed-merged-1.fq $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/BVK-trimmed-merged-2.fq | samtools view -bS - | samtools sort - > ${pathGuided}/`basename $G3`_gsnap.sortedByCoord.out.bam
+
+# To run Genome-guided Trinity and have Trinity execute GSNAP to align the reads, run Trinity like so:
+$TRINITY_HOME/Trinity --genome_guided_bam Asyl_GCA_001305905.1_ASM130590v1_genomic.fna_gsnap.sortedByCoord.out.bam --genome_guided_max_intron 10000 --max_memory 10G --CPU 16 --output "/SAN/Alices_sandpit/Torelli_transcriptomics/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/AAL-trinity_out_dir"
+## Finished. See /SAN/Alices_sandpit/Torelli_transcriptomics/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/AAL-trinity_out_dir/Trinity-GG.fasta for reconstructed transcripts
+
+### IS RUNNING on 6
+$TRINITY_HOME/Trinity --genome_guided_bam Marv_GCA_007455615.1_ASM745561v1_genomic.fna_gsnap.sortedByCoord.out.bam --genome_guided_max_intron 10000 --max_memory 10G --CPU 16 --output "/SAN/Alices_sandpit/Torelli_transcriptomics/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/FMN-trinity_out_dir"; $TRINITY_HOME/Trinity --genome_guided_bam Mgla_1_GCA_902806735.1_Bank_vole1_10x_genomic.fna_gsnap.sortedByCoord.out.bam --genome_guided_max_intron 10000 --max_memory 10G --CPU 16 --output "/SAN/Alices_sandpit/Torelli_transcriptomics/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/BVK-trinity_out_dir"
 
 ## Step 2. Quality check
 ## Transcriptomes quality check
@@ -80,128 +98,39 @@ $TRINITY_HOME/util/TrinityStats.pl $TOR_PATH/big_data/transcriptomicsTorellidata
 # done 3 times
 
 #### for genome guided 
+cd $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome
+$TRINITY_HOME/util/TrinityStats.pl $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/AAL-trinity_out_dir/Trinity-GG.fasta > AAL_GG_stats.txt
+#### TO DO 2 more times when genomes ready
 
-#### TO DO
+
+
 
 ### 2. Quantification of reads supports was done using bowtie2, samtools and trinity (ref) were used to align the trimmed reads back to their corresponding transcriptome
 # 2.1, build a bowtie2 index for your assembly.
 bowtie2-build $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/B.oneTranscriptomePerSpecies/AAL-merged_trinity/AAL-Trinity-transcriptome.fasta $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/B.oneTranscriptomePerSpecies/AAL-merged_trinity/AAL-Trinity-transcriptome
-
 # 2.2. map the reads.
 bowtie2 -p 16 --local --no-unal -x $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/B.oneTranscriptomePerSpecies/AAL-merged_trinity/AAL-Trinity-transcriptome -q -1 $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/AAL-trimmed-merged-1.fq -2 $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/AAL-trimmed-merged-2.fq | samtools view -Sb - | samtools sort -no - - > $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/B.forOneTranscriptomePerSpecies/AAL-bowtie2.nameSorted.bam
-
 # 2.3. count 
 $TRINITY_HOME/util/SAM_nameSorted_to_uniq_count_stats.pl $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/B.forOneTranscriptomePerSpecies/AAL-bowtie2.nameSorted.bam > AAL-uniq_count_stats
+## steps 2.1, 2.2 and 2.3 Done for the 3 species
 
-## Done for the 3 species
+#### for GG
+bowtie2-build $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/AAL-trinity_out_dir/Trinity-GG.fasta $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/AAL-trinity_out_dir/Trinity-GG; bowtie2 -p 16 --local --no-unal -x $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/AAL-trinity_out_dir/Trinity-GG -q -1 $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/AAL-trimmed-merged-1.fq -2 $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/AAL-trimmed-merged-2.fq | samtools view -Sb - | samtools sort -no - - > $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome/AAL-GG-bowtie2.nameSorted.bam; $TRINITY_HOME/util/SAM_nameSorted_to_uniq_count_stats.pl $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome/AAL-GG-bowtie2.nameSorted.bam > $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome/AAL-GG-uniq_count_stats
+### FINISHED RUNNING
 
-################ TO BE CONTINUED FROM HERE, STOPPED ON 16th OF APRIL 2021
+### to do later when transcriptomes are ready:
+bowtie2-build $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/BVK-trinity_out_dir/Trinity-GG.fasta $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/BVK-trinity_out_dir/Trinity-GG; bowtie2 -p 16 --local --no-unal -x $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/BVK-trinity_out_dir/Trinity-GG -q -1 $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/BVK-trimmed-merged-1.fq -2 $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/BVK-trimmed-merged-2.fq | samtools view -Sb - | samtools sort -no - - > $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome/BVK-GG-bowtie2.nameSorted.bam; $TRINITY_HOME/util/SAM_nameSorted_to_uniq_count_stats.pl $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome/BVK-GG-bowtie2.nameSorted.bam > $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome/BVK-GG-uniq_count_stats;
 
-* AAL-merged
---> longuest isoform
-Stats for aligned rna-seq fragments (note, not counting those frags where neither left/right read aligned)
-35944768 aligned fragments; of these:
-Overall,  97.07% of aligned fragments aligned as proper pairs
-
-* BVK-merged
-Stats for aligned rna-seq fragments (note, not counting those frags where neither left/right read aligned)
-46389394 aligned fragments; of these:
-Overall,  97.66% of aligned fragments aligned as proper pairs
-
-* FMN-merged
-Stats for aligned rna-seq fragments (note, not counting those frags where neither left/right read aligned)
-36793332 aligned fragments; of these:
-Overall,  97.64% of aligned fragments aligned as proper pairs
+bowtie2-build $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/FMN-trinity_out_dir/Trinity-GG.fasta $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/FMN-trinity_out_dir/Trinity-GG; bowtie2 -p 16 --local --no-unal -x $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/C.guidedTrinity/FMN-trinity_out_dir/Trinity-GG -q -1 $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/FMN-trimmed-merged-1.fq -2 $TOR_PATH/big_data/transcriptomicsTorellidata/4.trimmed_reads/merged_by_species/FMN-trimmed-merged-2.fq | samtools view -Sb - | samtools sort -no - - > $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome/FMN-GG-bowtie2.nameSorted.bam; $TRINITY_HOME/util/SAM_nameSorted_to_uniq_count_stats.pl $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome/FMN-GG-bowtie2.nameSorted.bam > $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/C.forGGTranscriptome/FMN-GG-uniq_count_stats
 
 ### 3. Completeness was quantified using BUSCO (Benchmarking Universal Single-Copy Orthologs) v3.0.2 
-(BUSCO: assessing genome assembly and annotation completeness with single-copy orthologs. Felipe A. Simão, Robert M. Waterhouse, Panagiotis Ioannidis, Evgenia V. Kriventseva, and Evgeny M. Zdobnov Bioinformatics, published online June 9, 2015 | Abstract | Full Text PDF | doi: 10.1093/bioinformatics/btv351) with the mamalia_odb9 database. 
-BUSCO was run in mode: transcriptome
+cd $TOR_PATH/big_data/transcriptomicsTorellidata/7.transcriptomeQualityCheck/B.forOneTranscriptomePerSpecies/busco_out; python /usr/local/bin/BUSCO/busco/scripts/run_BUSCO.py -i $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/B.oneTranscriptomePerSpecies/AAL-merged_trinity/AAL-Trinity-transcriptome.fasta -o AAL_busco -l /usr/local/bin/BUSCO/busco/dataset_lineage/mamalia_odb9/ -m tran; python /usr/local/bin/BUSCO/busco/scripts/run_BUSCO.py -i $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/B.oneTranscriptomePerSpecies/BVK-merged_trinity/BVK-Trinity-transcriptome.fasta -o BVK_busco -l /usr/local/bin/BUSCO/busco/dataset_lineage/mamalia_odb9/ -m tran; python /usr/local/bin/BUSCO/busco/scripts/run_BUSCO.py -i $TOR_PATH/big_data/transcriptomicsTorellidata/6.TrinityAssemblies/B.oneTranscriptomePerSpecies/FMN-merged_trinity/FMN-Trinity-transcriptome.fasta -o FMN_busco -l /usr/local/bin/BUSCO/busco/dataset_lineage/mamalia_odb9/ -m tran
+#### -> runs in 8
 
-* AAL. In a total of 4104 BUSCOs, 74.9% of genes were “complete”, 5.6% were “fragmented” and 19.5% were “missing”,
-considering only longuest isoforms
+## previous results
+# In a total of 4104 BUSCOs, the number of "complete"/"fragmented"/"missing" genes for our three transcriptomes were 74.9% / 5.6% / 19.5% for AAL transcriptome, 75.2% / 5.3% / 19.5% for BVK transcriptome, and 74.0% / 4.8% / 21.2% for FMN transcriptome. 
 
-* BVK. In a total of 4104 BUSCOs, 75.2% of genes were “complete”, 5.3% were “fragmented” and 19.5% were “missing”,
-considering only longuest isoforms
-
-* FMN. In a total of 4104 BUSCOs, 74.0% of genes were “complete”, 4.8% were “fragmented” and 21.2% were “missing”,
-considering only longuest isoforms
-
-
-
-#### AAL-ctrl
-[36,400,000]  lines read 
-
-Stats for aligned rna-seq fragments (note, not counting those frags where neither left/right read aligned)
-
-18245837 aligned fragments; of these:
-  18245837 were paired; of these:
-    559867 aligned concordantly 0 times
-    17685970 aligned concordantly exactly 1 time
-    0 aligned concordantly >1 times
-    ----
-    559867 pairs aligned concordantly 0 times; of these:
-    488360 aligned as improper pairs
-    71507 pairs had only one fragment end align to one or more contigs; of these:
-       53957 fragments had only the left /1 read aligned; of these:
-            53957 left reads mapped uniquely
-            0 left reads mapped >1 times
-       17550 fragments had only the right /2 read aligned; of these:
-            17550 right reads mapped uniquely
-            0 right reads mapped >1 times
-Overall,  96.93% of aligned fragments aligned as proper pairs
-
-## 10-3 Assesing assembly quality step 3: quantifying completeness
-
-SOFTWARES USED :
-
-* BUSCO v3.0.2 (BUSCO: assessing genome assembly and annotation completeness with single-copy orthologs.
-Felipe A. Simão, Robert M. Waterhouse, Panagiotis Ioannidis, Evgenia V. Kriventseva, and Evgeny M. Zdobnov
-Bioinformatics, published online June 9, 2015 | Abstract | Full Text PDF | doi: 10.1093/bioinformatics/btv351)
-
-* NCBI blast v
-
-* hmmer v.
-
-BUSCO Benchmarking Universal Single-Copy Orthologs
-
-Another metric of assembly quality is evaluating the extent to which it recovers single copy orthologs that are present across higher taxonomic groupings. 
-While in the absence of knowing which transcripts are truly expressed in a sample it is difficult to determine an absolute expectation for recovery of these orthologs, 
-clearly, high numbers of such genes classified as missing in an assembly should be considered a potential red flag. Furthermore, asssemblies based upon
-the same read data can be evaluated with respect to the numbers of genes that are complete, fragmented, or missing from the assembly.
-
-BUSCOs are selected from OrthoDB orthologous groups at major species radiations requiring orthologues to be present as single-copy genes in the vast majority (>90%) of species.
-(I used mammalia)
-
-alice@harriet:~/Dokumente/Torelli_transcriptomics/assemblyTrinityAfterTrimming/AAL-ctrl$ python /usr/local/bin/BUSCO/busco/scripts/run_BUSCO.py -i AAL-ctrl_Trinity.fasta -o AAL-ctrl_busco -l /usr/local/bin/BUSCO/busco/dataset_lineage/mamalia_odb9/ -m tran
-
-# BUSCO version is: 3.0.2 
-# The lineage dataset is: mammalia_odb9 (Creation date: 2016-02-13, number of species: 50, number of BUSCOs: 4104)
-# To reproduce this run: python /usr/local/bin/BUSCO/busco/scripts/run_BUSCO.py -i AAL-ctrl_Trinity.fasta -o AAL-ctrl_busco -l /usr/local/bin/BUSCO/busco/dataset_lineage/mamalia_odb9/ -m transcriptome -c 1
-#
-# Summarized benchmarking in BUSCO notation for file AAL-ctrl_Trinity.fasta
-# BUSCO was run in mode: transcriptome
-
-        C:70.6%[S:12.9%,D:57.7%],F:7.2%,M:22.2%,n:4104
-
-        2898    Complete BUSCOs (C)
-        530     Complete and single-copy BUSCOs (S)
-        2368    Complete and duplicated BUSCOs (D)
-        297     Fragmented BUSCOs (F)
-        909     Missing BUSCOs (M)
-        4104    Total BUSCO groups searched
-
-C:74.9%[S:36.9%,D:38.0%],F:5.6%,M:19.5%,n:4104
-
-  3073  Complete BUSCOs (C)
-  1514  Complete and single-copy BUSCOs (S)
-  1559  Complete and duplicated BUSCOs (D)
-  229   Fragmented BUSCOs (F)
-  802   Missing BUSCOs (M)
-  4104  Total BUSCO groups searched
-
-
-Plot!
-alice@harriet:~/Dokumente/Torelli_transcriptomics/assemblyTrinityAfterTrimming/AAL-ctrl$ python /usr/local/bin/BUSCO/busco/scripts/generate_plot.py -wd run_AAL-ctrl_busco/
+## Do for GG
 
 
 
@@ -219,12 +148,11 @@ And select the uniq transcripts
 --> too fragmented....
 
 ############################################
-# PART IV. RNAseq analysis
+# PART IV. RNAseq differential expression analysis
 
 # Strategy
 # * map reads back to assembly and count them
 # * DE (differential expression) analysis between CTRL and IFNg
-
 
 # Building count matrix for the 6 samples:
 $TRINITY_HOME/util/align_and_estimate_abundance.pl --transcripts ../AAL-Trinity-transcriptome.fasta --seqType fq --left ../../../rawData/filtratedRNAreads/AAL-ctrl_1.cor.fq --right ../../../rawData/filtratedRNAreads/AAL-ctrl_2.cor.fq --est_method RSEM --output_dir AAL-ctrl --aln_method bowtie2 --prep_reference
