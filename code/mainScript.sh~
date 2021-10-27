@@ -58,7 +58,7 @@ mouseIRGquery1=$TOR_PATH/GIT/RodentIRGs/data/REFERENCE_Protein_sequences_of_IRG_
 outputPath=$TOR_PATH/GIT/RodentIRGs/data/blast_results/RBBS_Irgmus2set2
 
 # first blast search: tblastn mus IRG protein sequences vs 3 extra rodent genomes (4 as one has 2)
-for F in $TOR_PATH/big_data/01genomes/3extraRodents/*.fna; do tblastn -query $mouseIRGquery1 -db $F -num_threads 30 -evalue 1e-50 -max_hsps 1 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $outputPath/tBlastnIRGmusGRCm39_vs_$(basename -- "$F").outfmt6; done
+for F in $TOR_PATH/big_data/01genomes/3extraRodents/*.fna; do tblastn -query $mouseIRGquery1 -db $F -num_threads 60 -evalue 1e-100 -max_hsps 1 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $outputPath/tBlastnIRGmusGRCm39_vs_$(basename -- "$F").outfmt6; done
 
 # convert blast results into fasta 
 for myfile in $outputPath/*outfmt6; do
@@ -67,4 +67,4 @@ for myfile in $outputPath/*outfmt6; do
 done
 
 # reciprocal BLAST search: BLASTX search protein databases using a translated nucleotide query
-for F in $TOR_PATH/big_data/01genomes/3extraRodents/*.fna; do blastx -db $mouseIRGquery1 -query $F -num_threads 30 -evalue 1e-50 -max_hsps 1 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $outputPath/tBlastn$(basename -- "$F")_vs_IRGmusGRCm39.outfmt6; done
+for F in $TOR_PATH/big_data/01genomes/3extraRodents/*.fna; do blastx -db $mouseIRGquery1 -query $F -num_threads 60 -evalue 1e-100 -max_hsps 1 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $outputPath/tBlastn$(basename -- "$F")_vs_IRGmusGRCm39.outfmt6; done

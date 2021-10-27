@@ -34,15 +34,8 @@ head -n 1 $TOR_PATH/big_data/02proteomes/14rodents/primary_transcripts/OrthoFind
 rg -f $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/tempIRGprot.txt $TOR_PATH/big_data/02proteomes/14rodents/primary_transcripts/OrthoFinder/Results_Sep16_1/Phylogenetic_Hierarchical_Orthogroups/N0.tsv >> $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/N0_HOG_IRG.tsv
 rm $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/tempIRGprot.txt
 
-# We match the OrthoFinder results with the known IRG names in Mmus
-R
-script
-
-# We then manually extract the sequences? Nope!
-
-
-
-
+# We match the OrthoFinder results with the known IRG names in Mmus and extract the fasta sequences
+## See mainScript.R
 
 ## C. Reciprocal Best Blast Hit identification:
 
@@ -60,11 +53,21 @@ outputPath=$TOR_PATH/GIT/RodentIRGs/data/blast_results/RBBS_Irgmus2set2
 # first blast search: tblastn mus IRG protein sequences vs 3 extra rodent genomes (4 as one has 2)
 for F in $TOR_PATH/big_data/01genomes/3extraRodents/*.fna; do tblastn -query $mouseIRGquery1 -db $F -num_threads 60 -evalue 1e-100 -max_hsps 1 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $outputPath/tBlastnIRGmusGRCm39_vs_$(basename -- "$F").outfmt6; done
 
-# convert blast results into fasta 
-for myfile in $outputPath/*outfmt6; do
-    newname=$(echo "${myfile##*/}" | sed -n -e 's/^.*tBlastnIRGmusGRCm39_vs_//p' |  awk '{print substr($0, 1, 4);exit}') ;
-    awk -v var="$newname" 'BEGIN { OFS = "\n" } { print ">" var "_"$1" "$2":"$9"-"$10" evalue:"$11" mismatches:"$5, $13 }' $myfile > $myfile.fasta;
-done
+# # convert blast results into fasta 
+# for myfile in $outputPath/*outfmt6; do
+#     newname=$(echo "${myfile##*/}" | sed -n -e 's/^.*tBlastnIRGmusGRCm39_vs_//p' |  awk '{print substr($0, 1, 4);exit}') ;
+#     awk -v var="$newname" 'BEGIN { OFS = "\n" } { print ">" var "_"$1" "$2":"$9"-"$10" evalue:"$11" mismatches:"$5, $13 }' $myfile > $myfile.fasta;
+# done
 
 # reciprocal BLAST search: BLASTX search protein databases using a translated nucleotide query
 for F in $TOR_PATH/big_data/01genomes/3extraRodents/*.fna; do blastx -db $mouseIRGquery1 -query $F -num_threads 60 -evalue 1e-100 -max_hsps 1 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $outputPath/tBlastn$(basename -- "$F")_vs_IRGmusGRCm39.outfmt6; done
+
+# # convert blast results into fasta 
+# for myfile in $outputPath/*vs_IRGmusGRCm39.outfmt6; do
+#     newname=$(echo "${myfile##*/}" | sed -n -e 's/^.*tBlastn//p' |  awk '{print substr($0, 1, 4);exit}') ;
+#     awk -v var="$newname" 'BEGIN { OFS = "\n" } { print ">" var "_"$1" "$2":"$9"-"$10" evalue:"$11" mismatches:"$5, $13 }' $myfile > $myfile.fasta;
+# done
+
+# Load the blast results into R (see mainScript.R)
+for file in *; do cat $file | sed -e 's/\t/ /g' > $file.2; done
+## This is done for easier handling in R 

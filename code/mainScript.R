@@ -1,4 +1,4 @@
-# A. Balard
+3# A. Balard
 # October 2021
 # Analyses done on Harriet server from Heitlinger team
 
@@ -146,3 +146,102 @@ nrow(data_FINAL)# 237
 fastaOF  <- paste0(">", data_FINAL$IRGname," ", data_FINAL$protein_name, "\n", data_FINAL$protein_seq_only)
 
 write.table(fastaOF, file = "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/candidatesFromOF.fasta", sep = "\n", col.names=FALSE, row.names = FALSE, quote=FALSE )
+
+################################################
+## Reciprocal Best Blast Hit: retrieve sequences
+################################################
+
+## Retrieve RBBH outfmt6 files
+PATH = "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/blast_results/RBBS_Irgmus2set2"
+
+myfiles  <- list.files(PATH, full.names=T)
+myfiles <- myfiles[grep("outfmt6.2", myfiles)]
+
+myfiles1 <- myfiles[grep("vs_IRGmusGRCm39", myfiles)]
+myfiles2 <- myfiles[grep("tBlastnIRGmus", myfiles)]
+
+musAsQuery  <- lapply(myfiles1, read.table)
+rodentsAsQuery  <- lapply(myfiles2, read.table)
+
+## rename list elements
+names(musAsQuery)  <- gsub("_G", "", gsub("tBlastn", "",stringr::str_extract(myfiles1, "tBlastn.{0,6}")))
+
+names(rodentsAsQuery)  <- gsub("_G", "", gsub("_vs_", "",stringr::str_extract(myfiles2, "_vs_.{0,6}")))
+
+## rename all columns within list
+namesBlastO6  <- c("qseqid","sseqid", "pident", "length", "mismatch", "gapopen", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "sseq")
+
+musAsQuery <-  lapply(musAsQuery, setNames, namesBlastO6)
+rodentsAsQuery <-  lapply(rodentsAsQuery, setNames, namesBlastO6)
+
+## Step 1: Keep those reads with RBBH for IRGname + genomic sequence, and with similar sequence end and start +/- 5bp
+library(dplyr)
+
+names(rodentsAsQuery)
+
+names(musAsQuery)
+
+musAsQuery[[2]]
+
+# if multiple IRG at the same place, keep the more likely (low e-value, high bitscore)
+
+getRBBH <- function(i, range=-100:100){
+    R  <- rodentsAsQuery[[i]]
+    M <- musAsQuery[[i]]
+
+    all  <- rbind(data.frame(A=R$qseqid, B=R$sseqid, C=R$sstart, D=R$send),
+                  data.frame(A=M$sseqid, B=M$qseqid, C=M$qstart, D=M$qend))
+    
+    amplified <- data.frame(A=unlist(lapply(all$A, function(x) rep(x,length(range)))),
+                            B=unlist(lapply(all$B, function(x) rep(x,length(range)))),
+                            C=unlist(lapply(all$C, function(x) x+range)),
+                            D=unlist(lapply(all$D, function(x) rep(x, length(range)))))
+
+    amplified <- data.frame(A=unlist(lapply(amplified$A, function(x) rep(x,length(range)))),
+                            B=unlist(lapply(amplified$B, function(x) rep(x,length(range)))),
+                            C=unlist(lapply(amplified$C, function(x) rep(x, length(range)))),
+                            D=unlist(lapply(amplified$D, function(x) x+range)))
+
+
+    df  <-  inner_join(all, amplified) 
+
+    df  <- unique(df[duplicated(df),])
+                                       
+    return(df)
+}
+
+getRBBH(3)
+
+
+## Step 2: remove candidates for several IRGs
+
+
+
+nrow(t)
+
+nrow(RBBHtoomany)
+
+
+head(df)
+
+unique(paste(test$qseqid, test$sseqid, test$sstart, test$send),
+      paste(test2$sseqid, test2$qseqid, test2$qstart, test2$qend))
+
+
+## step 2
+all  <- c(paste(test$qseqid, test$sseqid),
+          paste(test2$sseqid, test2$qseqid))
+
+rbbhstep1 <- all[duplicated(all)]
+
+
+
+
+rbbh <- all[duplicated(all)]
+
+
+unique(all)[order(unique(all))]
+
+
+unique(paste(test$qseqid, test$sseqid, test$sstart, test$send),
+      paste(test2$sseqid, test2$qseqid, test2$qstart, test2$qend))
