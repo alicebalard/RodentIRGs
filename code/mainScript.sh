@@ -39,14 +39,24 @@ rm $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/tempIRGprot.txt
 
 ## C. Reciprocal Best Blast Hit identification:
 
+# Extract IRGs Mmus protein codes 
+cat $TOR_PATH/GIT/RodentIRGs/data/Table1_IRGs_naming.csv | cut -d ',' -f1,6 | sed 's/\;.*//' | sed '/?/d' | awk -F, '$2 != ""' > $TOR_PATH/GIT/RodentIRGs/data/GRCm39IRGprotseq.txt
+
+# Extract IRGs Mmus protein sequences
+######
+# -->done in R mainScript.R
+# $TOR_PATH/GIT/RodentIRGs/data/GRCm39IRGprotseq.fasta
+######
+
 # make blast db from our additional rodent genomes
 for F in $TOR_PATH/big_data/01genomes/3extraRodents/*.fna; do makeblastdb -in $F -dbtype nucl; done
+
 # make blast db from the Mmus IRG (original query)
-makeblastdb -in $TOR_PATH/GIT/RodentIRGs/data/REFERENCE_Protein_sequences_of_IRG_mouse_GRCm39_and_Bekpen2005.fasta -dbtype prot
+makeblastdb -in $TOR_PATH/GIT/RodentIRGs/data/fasta_sequences/Mmus_IRG_protseq.fasta -dbtype prot
 
 ## Species one by one
 #Input original query file
-mouseIRGquery1=$TOR_PATH/GIT/RodentIRGs/data/REFERENCE_Protein_sequences_of_IRG_mouse_GRCm39_and_Bekpen2005.fasta
+mouseIRGquery1=$TOR_PATH/GIT/RodentIRGs/data/fasta_sequences/Mmus_IRG_protseq.fasta
 #Path to output results
 outputPath=$TOR_PATH/GIT/RodentIRGs/data/blast_results/RBBS_Irgmus2set2
 

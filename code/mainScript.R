@@ -6,6 +6,10 @@ library(tidyr)
 library(rentrez) # to retrieve NCBI sequences
 library(tidyverse)
 
+##########################
+## OrthoFinder analysis ##
+##########################
+
 ## We match the OrthoFinder results with the known IRG names in Mmus
 tabRef <- read.csv("/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/Table1_IRGs_naming.csv")
 
@@ -78,6 +82,8 @@ genes  <- lapply(data_long[,"protein_name"], function(x){
 ## add to data frame
 data_long$geneID  <- genes
 
+# load("/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/data_long.RData")
+
 # check if all lines have a geneID
 data_long[sapply(data_long$geneID, is.null),]
 ##NP_001129214.2
@@ -134,23 +140,58 @@ data_FINAL$IRGname <- paste0(substr(data_FINAL$species, 1, 4), "_", data_FINAL$N
 ##############################
 ## SAVING POINT 
 save(data_FINAL, file = "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/data_FINAL.RData")
+
 ## to load
-#load("/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/data_FINAL.RData")
+load("/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/data_FINAL.RData")
 ##############################
 
 data_FINAL  <- data_FINAL[!data_FINAL$protein_seq_only %in% "Supplied id parameter is empty.",]
 
 nrow(data_FINAL)# 237
 
+## Rename NameBekpen for tandems (1 protein, 2 names, let's merge)
+data_FINAL$Name_Bekpen_2005[data_FINAL$Name_Bekpen_2005 %in% "Irgb1"] <-  "Irgb1b2"
+data_FINAL$Name_Bekpen_2005[data_FINAL$Name_Bekpen_2005 %in% "Irgb3"] <-  "Irgb5*b3"
+data_FINAL$Name_Bekpen_2005[data_FINAL$Name_Bekpen_2005 %in% "Irgb9"] <-  "Irgb9b8"
+
 ### Make fasta file from orthofinder results
 fastaOF  <- paste0(">", data_FINAL$IRGname," ", data_FINAL$protein_name, "\n", data_FINAL$protein_seq_only)
 
-write.table(fastaOF, file = "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/candidatesFromOF.fasta", sep = "\n", col.names=FALSE, row.names = FALSE, quote=FALSE )
+write.table(fastaOF, file = "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/fasta_sequences/candidatesFromOF.fasta", sep = "\n", col.names=FALSE, row.names = FALSE, quote=FALSE )
 
 ################################################
 ## Reciprocal Best Blast Hit: retrieve sequences
 ################################################
 
+musIRG <- read.csv("/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/GRCm39IRGprotseq.txt")
+
+## Rename NameBekpen for tandems (1 protein, 2 names, let's merge)
+musIRG$Name_Bekpen_2005[musIRG$Name_Bekpen_2005 %in% "Irgb1"] <-  "Irgb1b2"
+musIRG$Name_Bekpen_2005[musIRG$Name_Bekpen_2005 %in% "Irgb3"] <-  "Irgb5*b3"
+musIRG$Name_Bekpen_2005[musIRG$Name_Bekpen_2005 %in% "Irgb9"] <-  "Irgb9b8"
+
+## Retrieve the sequences from NCBI
+musIRGfasta <- lapply(musIRG[,"proteins_GRCm39"], function(x)
+    entrez_fetch(db = "protein", rettype = 'fasta', id = x))
+
+## Extract the IRG names
+namesseq <- paste0(">Mmus_", musIRG$Name_Bekpen_2005, " ",
+       gsub(">", "", gsub("\n", "", gsub("].*","", unlist(musIRGfasta)))),
+       "]")
+
+# Extract characters after pattern to obtain only the protein sequence without header
+seq <- gsub("\n", "", gsub(".*]","", unlist(musIRGfasta)))
+
+head(as.vector(t(data.frame(namesseq, seq))))
+
+write.table(as.vector(t(data.frame(namesseq, seq))), "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/fasta_sequences/Mmus_IRG_protseq.fasta", quote = F, row.names = F, col.names = F)
+##############################
+
+
+## The RBBH itself is done in bash (mainScript.sh)
+
+
+##############################
 ## Retrieve RBBH outfmt6 files
 PATH = "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/blast_results/RBBS_Irgmus2set2"
 
@@ -177,45 +218,81 @@ rodentsAsQuery <-  lapply(rodentsAsQuery, setNames, namesBlastO6)
 ## Step 1: Keep those reads with RBBH for IRGname + genomic sequence, and with similar sequence end and start +/- 5bp
 library(dplyr)
 
-names(rodentsAsQuery)
-
-names(musAsQuery)
-
-musAsQuery[[2]]
-
 # if multiple IRG at the same place, keep the more likely (low e-value, high bitscore)
 
-getRBBH <- function(i, range=-100:100){
+getRBBHdf <- function(i, range = -100:100){
     R  <- rodentsAsQuery[[i]]
     M <- musAsQuery[[i]]
 
-    all  <- rbind(data.frame(A=R$qseqid, B=R$sseqid, C=R$sstart, D=R$send),
-                  data.frame(A=M$sseqid, B=M$qseqid, C=M$qstart, D=M$qend))
+    dfR <- data.frame(A=R$qseqid, B=R$sseqid, C=R$sstart, D=R$send,
+                      E=R$evalue, F=R$bitscore)
+    dfM <- data.frame(A=M$sseqid, B=M$qseqid, C=M$qstart, D=M$qend,
+                      E=M$evalue, F=M$bitscore)
+
+    ## amplify the first dataframe (to extend the possible start and end of 100bp, still it's the same position)
+    amplifiedR <- data.frame(A=unlist(lapply(dfR$A, function(x) rep(x,length(range)))),
+                             B=unlist(lapply(dfR$B, function(x) rep(x,length(range)))),
+                             C=unlist(lapply(dfR$C, function(x) x+range)),
+                             D=unlist(lapply(dfR$D, function(x) rep(x, length(range)))),
+                             EaR=unlist(lapply(dfR$E, function(x) rep(x, length(range)))),
+                             FaR=unlist(lapply(dfR$F, function(x) rep(x, length(range)))))
+    amplifiedR <- data.frame(A=unlist(lapply(amplifiedR$A, function(x) rep(x,length(range)))),
+                             B=unlist(lapply(amplifiedR$B, function(x) rep(x,length(range)))),
+                             C=unlist(lapply(amplifiedR$C, function(x) rep(x, length(range)))),
+                             D=unlist(lapply(amplifiedR$D, function(x) x+range)),
+                             EaR=unlist(lapply(amplifiedR$EaR, function(x) rep(x,length(range)))),
+                             FaR=unlist(lapply(amplifiedR$FaR, function(x) rep(x,length(range)))))
+
+    ## keep the corresponding sequences with matching start and end between both blast
+    df  <-  inner_join(amplifiedR , dfM, by=c("A", "B", "C", "D"))
     
-    amplified <- data.frame(A=unlist(lapply(all$A, function(x) rep(x,length(range)))),
-                            B=unlist(lapply(all$B, function(x) rep(x,length(range)))),
-                            C=unlist(lapply(all$C, function(x) x+range)),
-                            D=unlist(lapply(all$D, function(x) rep(x, length(range)))))
-
-    amplified <- data.frame(A=unlist(lapply(amplified$A, function(x) rep(x,length(range)))),
-                            B=unlist(lapply(amplified$B, function(x) rep(x,length(range)))),
-                            C=unlist(lapply(amplified$C, function(x) rep(x, length(range)))),
-                            D=unlist(lapply(amplified$D, function(x) x+range)))
-
-
-    df  <-  inner_join(all, amplified) 
-
-    df  <- unique(df[duplicated(df),])
-                                       
     return(df)
 }
 
-getRBBH(3)
+df <- getRBBHdf(3)
+
+df
+
+nrow(df)
+
+## keep the ones that are found twice
+t <- massiveDF[duplicated(massiveDF[c("A", "B", "C", "D")], fromLast = T),]
+
+
+
+t[order(t$A, t$B),]
+
+nrow(t)
+
+## should have same numer of true and false!
+table(rownames(t) %in% rownames(unique(t[c("A", "B", "C", "D")])))
+
+
+## keep the second occurence
+t
+
+36*2
+
+
+which(!rownames(t) %in% rownames(unique(t[c("A", "B", "C", "D")])))
+
+
+rownames(t)[!rownames(t) %in% rownames(unique(t[c("A", "B", "C", "D")]))]
+
+
+
+
+head(t)
+
+
+nrow(massiveDF)
+
+nrow(t)
+
+head(massiveDF)
 
 
 ## Step 2: remove candidates for several IRGs
-
-
 
 nrow(t)
 
