@@ -215,23 +215,6 @@ namesBlastO6  <- c("qseqid","sseqid", "pident", "length", "mismatch", "gapopen",
 musAsQuery <-  lapply(musAsQuery, setNames, namesBlastO6)
 rodentsAsQuery <-  lapply(rodentsAsQuery, setNames, namesBlastO6)
 
-#############################
-#### TO RM AFTER REAL RUN
-rodentsAsQuery <- lapply(rodentsAsQuery, function(y){
-  sub <- strsplit(y$sseqid, "_")
-  y$sseqid <- paste0("Mmus_", sapply(sub, function(x) {
-    name = x[[1]]
-    ## Rename NameBekpen for tandems (1 protein, 2 names, let's merge)
-    name[name %in% "Irgb1"] <-  "Irgb1b2"
-    name[name %in% "Irgb3"] <-  "Irgb5*b3"
-    name[name %in% "Irgb9"] <-  "Irgb9b8"
-    return(name)
-  }))
-  return(y)
-})
-
-#############################
-
 # Step 1: Keep those reads with RBBH for IRGname + genomic sequence, and with similar sequence end and start +/- 5bp
 library(dplyr)
 
@@ -294,7 +277,6 @@ newdfList <- lapply(newdfList, function(x){
 vecFas <- vector()
 
 ## prepare the fasta file format (including a counter for each IRG)
-test <- newdfList[[2]]
 ## rename the list:
 names(newdfList) <- names(rodentsAsQuery)
 
