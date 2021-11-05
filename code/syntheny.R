@@ -107,26 +107,46 @@ geneDF$IRGgroup[geneDF$Name_Bekpen_2005 %in% c("Irgb9b8", "Irgb1b2", "Irgb5" , "
 geneDF$IRGgroup[geneDF$Name_Bekpen_2005 %in% c("Irga2", "Irga4", "Irga3", "Irga6")] <- "Irga"
 geneDF$IRGgroup[geneDF$Name_Bekpen_2005 %in% c("Irgb6*", "Irgb6") ] <- "Irgb6"
 
+# order species according to phylogeny:
+geneDF$sp <- factor(geneDF$sp, levels = c("Itri", "Anil", "Mcou", "Rrat", "Rnor",
+                                          "Mpah", "Mmus", "Mcar", "Aamp", "Moch", 
+                                          "Otor", "Pman", "Pleu", "Cgri"))
+
 # colors for plot:
 mycolors <- c("darkgray","red",6,"violet","darkblue","blue2","green1","green2","green3","blue4")
+
+# to add a scale instead of x axis
+scaleDF = data.frame(sp=geneDF$sp, x=300000, xend=310000, chr="NW_020822456.1", chr2="NW_020822466.1")
+scaleDF <- scaleDF[scaleDF$sp %in% "Cgri",] # to keep the levels for factor
+scaleDF$label <- NA
+scaleDF$label[1] = "10kb"
 
 ## and plot
 syntenyPlot <- ggplot(geneDF) +
   # chr
-  geom_segment(aes(x=chrLeft, xend = chrRight, y=chr, yend=chr), col = "grey", size = 2) +
+  geom_segment(aes(x=chrLeft, xend = chrRight, y=chr, yend=chr), col = "grey", size = 1) +
   # break in long chr
-  geom_segment(aes(x=breakstart, xend=breakend, y=chr, yend=chr), col = "black", size = 10) +
+  geom_segment(aes(x=breakstart+1000, xend=breakend, y=chr, yend=chr), col = "black", size = 7) +
   # genes
-  geom_segment(aes(x=geneLeft, xend=geneRight, y=chr, yend=chr, col = IRGgroup), size = 4) +
-  
-  # geom_rect(aes(xmin=geneLeft, xmax = geneRight, ymin=chr, ymax=chr, fill = IRGgroup, col = IRGgroup), size=4) +
+  geom_segment(aes(x=geneLeft, xend=geneRight, y=chr, yend=chr, col = IRGgroup), size = 3) +
   theme_bw() +
-  facet_grid(sp~., scales = "free_y") +
-  scale_color_manual(values = mycolors)
+  # add scale
+  geom_errorbarh(data=scaleDF,
+                 aes(xmin=x,y=chr,xmax=xend), size = 1) +
+  geom_text(data=scaleDF, aes(y=chr2, label=label), x=305000) + 
+  #facet_grid(sp~., scales = "free_y") +
+  facet_wrap(sp~., scales = "free_y", nrow = 14) +
+  scale_color_manual(values = mycolors) +
+  scale_x_continuous(expand=c(0,0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_blank(),
+        axis.text.x  = element_blank(), axis.ticks.x  = element_blank(), axis.title.x  = element_blank(),
+        axis.title.y  = element_blank(),
+        panel.border=element_blank()) 
 
 syntenyPlot
 
 ### SAVING POINT:
-pdf(file = "../figures/SyntenyPlot.pdf", width = 20, height = 25)
+pdf(file = "../figures/SyntenyPlot.pdf", width = 13, height = 15)
 syntenyPlot
 dev.off()
