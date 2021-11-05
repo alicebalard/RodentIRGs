@@ -137,14 +137,6 @@ data_FINAL <- data_FINAL %>%
 
 data_FINAL$IRGname <- paste0(substr(data_FINAL$species, 1, 4), "_", data_FINAL$Name_Bekpen_2005, ".", data_FINAL$ticker)
 
-##############################
-## SAVING POINT 
-save(data_FINAL, file = "/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/data_FINAL.RData")
-
-## to load
-load("/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/data_FINAL.RData")
-##############################
-
 data_FINAL  <- data_FINAL[!data_FINAL$protein_seq_only %in% "Supplied id parameter is empty.",]
 
 nrow(data_FINAL)# 237
@@ -153,6 +145,14 @@ nrow(data_FINAL)# 237
 data_FINAL$Name_Bekpen_2005[data_FINAL$Name_Bekpen_2005 %in% "Irgb1"] <-  "Irgb1b2"
 data_FINAL$Name_Bekpen_2005[data_FINAL$Name_Bekpen_2005 %in% "Irgb3"] <-  "Irgb5*b3"
 data_FINAL$Name_Bekpen_2005[data_FINAL$Name_Bekpen_2005 %in% "Irgb9"] <-  "Irgb9b8"
+
+##############################
+## SAVING POINT 
+save(data_FINAL, file = "../data/data_FINAL_OF.RData")
+
+## to load
+# load("..data/data_FINAL_OF.RData")
+##############################
 
 ### Make fasta file from orthofinder results
 fastaOF  <- paste0(">", data_FINAL$IRGname," ", data_FINAL$protein_name, "\n", data_FINAL$protein_seq_only)
