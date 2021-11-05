@@ -41,18 +41,6 @@ chromoDF <- merge(chromoDF, rangeDF[c("chr", "range")])
 chromoDF$broken <- "no"
 chromoDF$broken[chromoDF$range > 1e6] <- "yes"
 
-# chromoDF$breakstart
-
-# breakstart <- max(chromoDF$chrRight[chromoDF$chrRight < 2e6]) # the longer of shorter chromosomes
-# breakend <- min(chromoDF$chrRight[chromoDF$chrRight > 1e6]) # the shorter of longer chromosomes
-# breaklength <- breakend -breakstart
-
-
-
-# # where do we end the chromosome depending if broken of not?
-# chromoDF$chrRight[chromoDF$broken %in% "yes"] <-
-#   chromoDF$chrRight[chromoDF$broken %in% "yes"] - breaklength
-
 # what is the position for genes on first part/unbroken chromosomes?
 ## prepare genes positions
 geneDF <- data_FINAL
@@ -106,6 +94,7 @@ geneDF$IRGgroup <- geneDF$Name_Bekpen_2005
 geneDF$IRGgroup[geneDF$Name_Bekpen_2005 %in% c("Irgb9b8", "Irgb1b2", "Irgb5" , "Irgb5*b3")] <- "Irgb tandems"
 geneDF$IRGgroup[geneDF$Name_Bekpen_2005 %in% c("Irga2", "Irga4", "Irga3", "Irga6")] <- "Irga"
 geneDF$IRGgroup[geneDF$Name_Bekpen_2005 %in% c("Irgb6*", "Irgb6") ] <- "Irgb6"
+geneDF$IRGgroup[geneDF$Name_Bekpen_2005 %in% c("Irgm1", "Irgm2", "Irgm3") ] <- "Irgm"
 
 # order species according to phylogeny:
 geneDF$sp <- factor(geneDF$sp, levels = c("Itri", "Anil", "Mcou", "Rrat", "Rnor",
@@ -113,7 +102,7 @@ geneDF$sp <- factor(geneDF$sp, levels = c("Itri", "Anil", "Mcou", "Rrat", "Rnor"
                                           "Otor", "Pman", "Pleu", "Cgri"))
 
 # colors for plot:
-mycolors <- c("darkgray","red",6,"violet","darkblue","blue2","green1","green2","green3","blue4")
+mycolors <- c("yellow","red",6,"violet","darkblue","lightblue","green1","brown")
 
 # to add a scale instead of x axis
 scaleDF = data.frame(sp=geneDF$sp, x=300000, xend=310000, chr="NW_020822456.1", chr2="NW_020822466.1")
@@ -121,20 +110,37 @@ scaleDF <- scaleDF[scaleDF$sp %in% "Cgri",] # to keep the levels for factor
 scaleDF$label <- NA
 scaleDF$label[1] = "10kb"
 
+# for gene label
+geneDF$shortName <- gsub("Irg", "", geneDF$Name_Bekpen_2005)
+
+# gene direction
+geneDF$direction <- "forward"
+geneDF$direction[geneDF$start > geneDF$stop] <- "reverse"
+
 ## and plot
 syntenyPlot <- ggplot(geneDF) +
   # chr
   geom_segment(aes(x=chrLeft, xend = chrRight, y=chr, yend=chr), col = "grey", size = 1) +
   # break in long chr
   geom_segment(aes(x=breakstart+1000, xend=breakend, y=chr, yend=chr), col = "black", size = 7) +
-  # genes
+  # GENES:
+  # arrows for directions
+  geom_segment(data=geneDF[geneDF$direction %in% "forward",],
+               aes(x = geneLeft, y = chr, xend = geneRight, yend = chr, col = IRGgroup),
+               arrow = arrow(length = unit(0.4, "cm"))) +
+  geom_segment(data=geneDF[geneDF$direction %in% "reverse",],
+               aes(x = geneRight, y = chr, xend = geneLeft, yend = chr, col = IRGgroup),
+               arrow = arrow(length = unit(0.4, "cm"))) +
+  # blocks for position
   geom_segment(aes(x=geneLeft, xend=geneRight, y=chr, yend=chr, col = IRGgroup), size = 3) +
+  # genes labels
+  geom_text(aes(x=geneLeft+(geneRight-geneLeft)/2, y=chr, label=shortName), size = 2) + 
+
   theme_bw() +
   # add scale
   geom_errorbarh(data=scaleDF,
                  aes(xmin=x,y=chr,xmax=xend), size = 1) +
   geom_text(data=scaleDF, aes(y=chr2, label=label), x=305000) + 
-  #facet_grid(sp~., scales = "free_y") +
   facet_wrap(sp~., scales = "free_y", nrow = 14) +
   scale_color_manual(values = mycolors) +
   scale_x_continuous(expand=c(0,0)) +
