@@ -11,9 +11,9 @@ library(tidyverse)
 ##########################
 
 ## We match the OrthoFinder results with the known IRG names in Mmus
-tabRef <- read.csv("/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/Table1_IRGs_naming.csv")
+tabRef <- read.csv("../data/Table1_IRGs_naming.csv")
 
-tabOF <- read.csv("/SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/orthofinder_results/N0_HOG_IRG.tsv", sep="\t")
+tabOF <- read.csv("../data/orthofinder_results/N0_HOG_IRG.tsv", sep="\t")
 
 tabRef <- tabRef[c("Name_Bekpen_2005", "proteins_GRCm39")]
 
@@ -151,8 +151,12 @@ data_FINAL$Name_Bekpen_2005[data_FINAL$Name_Bekpen_2005 %in% "Irgb9"] <-  "Irgb9
 save(data_FINAL, file = "../data/data_FINAL_OF.RData")
 
 ## to load
-# load("..data/data_FINAL_OF.RData")
+load("../data/data_FINAL_OF.RData")
 ##############################
+
+## Check orthogroups
+table(data_FINAL$OG, data_FINAL$Name_Bekpen_2005)
+
 
 ### Make fasta file from orthofinder results
 fastaOF  <- paste0(">", data_FINAL$IRGname," ", data_FINAL$protein_name, "\n", data_FINAL$protein_seq_only)
