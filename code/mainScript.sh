@@ -9,6 +9,13 @@ TOR_PATH=/SAN/Alices_sandpit/Torelli_transcriptomics
 makeblastdb -in $TOR_PATH/big_data/genomes/Mmus_GCF_000001635.27_GRCm39_genomic.fna -dbtype "nucl"
 tblastn -db $TOR_PATH/big_data/genomes/Mmus_GCF_000001635.27_GRCm39_genomic.fna -query $TOR_PATH/GIT/RodentIRGs/data/REFERENCE_Protein_sequences_of_IRG_mouse_GRCm39_and_Bekpen2005.fasta -num_threads 16 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq" -out $TOR_PATH/GIT/RodentIRGs/data/blast_results/IRGmus2mus/tblastnIRGBekpen_vs_MmusGRCm39.outfmt6 -max_target_seqs 3 -max_hsps 2
 
+#################
+## update december 2021: replace proteome Mmus with curated CORRECT IRG sequences
+### Sequences in: RodentIRGs/data/fasta_sequences/ReferenceMMus_codingIrgs_CURATED.fasta 
+
+bash /SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/code/S1_curateMmusGenome.sh
+
+################
 ## B. OrthoFinder identification
 ## source: https://github.com/davidemms/OrthoFinder
 ### The files from Ensembl will contain many transcripts per gene. If we ran OrthoFinder on these raw files it would take 10x longer than necessary and could lower the accuracy. We’ll use a script provided with OrthoFinder to extract just the longest transcript variant per gene and run OrthoFinder on these files:
@@ -19,12 +26,12 @@ for f in *faa ; do python /localstorage/alice/anaconda3/pkgs/orthofinder-2.5.1-0
 orthofinder -f primary_transcripts/
 
 # Extract IRGs Mmus protein codes 
-cat $TOR_PATH/GIT/RodentIRGs/data/Table1_IRGs_naming.csv | cut -d ',' -f6 > $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/tempIRGprot.txt;
-cat $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/tempIRGprot.txt | sed '/^$/d' > $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/temp2;
-cat $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/temp2 | sed '/?/d' > $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/tempIRGprot.txt;
-sed 's/\;/\n/g' $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/tempIRGprot.txt > $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/temp;
-sed 's/ //g' $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/temp > $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/tempIRGprot.txt;
-rm $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/temp; rm $TOR_PATH/GIT/RodentIRGs/data/orthofinder_results/temp2
+grep ">" /SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/fasta_sequences/ReferenceMMus_codingIrgs_CURATED.fasta | cut -d ' ' -f1 | sed 's/>//' > /SAN/Alices_sandpit/Torelli_transcriptomics/GIT/RodentIRGs/data/orthofinder_results/tempIRGprot.txt
+
+## I'm here
+
+
+
 
 # Extract all orthologues:
 
